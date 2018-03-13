@@ -5,7 +5,9 @@ import org.gradle.api.Project
 import org.gradle.api.tasks.SourceSetContainer
 
 class ResourceFilterExtension {
-    String[] profiles = ["dev","release"]
+   String[] profiles = ["dev","release"]
+
+
 }
 
 
@@ -14,32 +16,40 @@ class FilterPlugin implements Plugin<Project> {
     @Override
     void apply(Project project) {
         def extension = project.extensions.create('resourceFilter', ResourceFilterExtension)
+
+
         def sourceSets = (SourceSetContainer) project.getProperties().get('sourceSets')
-        def srcDirs = sourceSets.getByName('main').getResources().getSrcDirs()
         project.afterEvaluate {
-            extensions.getProfiles().each {profile->
+            extension.getProfiles().each { profile ->
+                def profileDir = new File(pathToResources + profile + '/')
+                if (!profileDir.exists())
+                    profileDir.mkdir()
 
-             def profileDir = new File(pathToResources+ profile + '/')
-                if(!profileDir.exists())
-                profileDir.mkdir()
-                project.tasks.create( profile +  "Build") {
+
+                project.task(profile + "Build") {
+                    group = 'Profile'
                     doLast {
-                        println profile.toUpperCase() +  " BUILD"
-                        srcDirs = [pathToResources+ profile + '/']
+                        println profile.toUpperCase() + " BUILD"
+                        println pathToResources
+                       sourceSets.main.resources.srcDirs  = ["$pathToResources$profile/"]
 
-                 }
+                    }
 
                 }.finalizedBy(project.tasks.getByName('build'))
-                project.tasks.create(profile + "Run") {
-                    doLast {
-                        println profile.toUpperCase() +  " RUN"
-                        srcDirs = [pathToResources+ profile + '/']
 
-                 }
+                project.task(profile + "Run") {
+                    group = 'Profile'
+                    doLast {
+
+                        println profile.toUpperCase() + " RUN"
+                        sourceSets.main.resources.srcDirs = ["$pathToResources$profile/"]
+
+                    }
 
                 }.finalizedBy(project.tasks.getByName('run'))
 
             }
+
         }
     }
 }
