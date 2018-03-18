@@ -45,7 +45,7 @@ pluginBundle {
             displayName = 'Resource Filter Plugin'
             description = 'Plugin for resource filtering'
             tags = ['resource','filter']
-            version = '0.1'
+            version = '0.2'
         }
     }
 }
