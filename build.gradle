@@ -9,7 +9,6 @@ buildscript {
     }
 }
 
-
 plugins {
     id "com.gradle.plugin-publish" version "0.9.10"
 }
@@ -21,6 +20,7 @@ version '0.1'
 apply plugin: 'groovy'
 apply plugin: 'com.gradle.plugin-publish'
 
+
 repositories {
     jcenter()
 }
@@ -29,6 +29,11 @@ dependencies {
     compile localGroovy()
     compile gradleApi()
 }
+
+
+
+
+
 
 
 pluginBundle {
@@ -44,4 +49,5 @@ pluginBundle {
         }
     }
 }
+
 
